@@ -1,0 +1,29 @@
+version: '2'
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+  redis:
+    image: redis
+  nginx:
+    image: nginx
+  web:
+    build: .
+    image: dmzsz/app
+    # dockerfile: Dockerfile-app
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - .:/var/www/app
+    expose:
+      - "3000"
+      - "8000"
+    ports:
+      - "3000:3000"
+      - "3306:3306"
+      - "6379:6379"
+      - "80:80"
+    depends_on:
+      - db
+      - redis
+      - nginx
